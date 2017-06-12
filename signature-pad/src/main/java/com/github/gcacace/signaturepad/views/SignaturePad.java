@@ -841,14 +841,17 @@ public class SignaturePad extends View {
 
             }
             int j = 1;
+            mPoints = new ArrayList<>(); // init beizer(prevent cycle
             for (int i = this.mPts.size() - 1; i >= 0; i--) {
                 Point to = this.mPts.get(i);
                 if (mSignatureBitmapCanvas != null) {
 
                     float tmpX = plotWIDTH - (j - 1) * interval + originX;
                     float tmpY = -from.val * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2;
-//                    addPointBeizer(getNewPoint(tmpX, tmpY));
-                    mSignatureBitmapCanvas.drawLine((i - 1) * interval, -from.val * plotHEIGHT / MAXHEIGHT + originY, i * interval, -to.val * plotHEIGHT / MAXHEIGHT + originY, mPaintHRT);
+                    addPointBeizer(getNewPoint(tmpX, tmpY));
+//                    mSignatureBitmapCanvas.drawCircle(tmpX,tmpY,10,mPaintHRT);
+//                    mSignatureBitmapCanvas.drawText(""+j,tmpX,tmpY,mPaintHRT);
+//                    mSignatureBitmapCanvas.drawLine((i - 1) * interval, -from.val * plotHEIGHT / MAXHEIGHT + originY, i * interval, -to.val * plotHEIGHT / MAXHEIGHT + originY, mPaintHRT);
 
                     if (to.grid_level == 2) {
                         Paint paintTime = new Paint();

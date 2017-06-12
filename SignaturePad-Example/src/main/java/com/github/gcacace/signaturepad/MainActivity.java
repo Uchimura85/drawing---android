@@ -39,7 +39,7 @@ public class MainActivity extends Activity{
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private SignaturePad mSignaturePad;
     private Button mClearButton;
-    private Button mSaveButton;
+
     private Button mChangePlotTypeButton;
     private Button mZoomInButton;
     private Button mZoomOutButton;
@@ -48,7 +48,7 @@ public class MainActivity extends Activity{
     float [] arr =new float[MAX_LENGTH];
     int [] grid_lines =new int[MAX_LENGTH];
 
-    List<String> strTime = new ArrayList<String>();
+    List<String> strTime = new ArrayList<>();
     float sinX = 0f;
     void drawUpdate(){
         float [] ttt = new float[]{130, 17, 120, 12,34,0, 140, 160, 130, 140, 160, 130, 140, 160, 130, 140, 160, 130, 140, 160, 170, 200};
@@ -66,7 +66,7 @@ public class MainActivity extends Activity{
         }
         strTime.add("");
 
-        arr[arr.length-1]=1500 + (float)Math.sin(sinX)*1500;
+//        arr[arr.length-1]=1500 + (float)Math.sin(sinX)*1500;
         grid_lines[0] = 2;
         strTime.set(0,"11:00 PM");
         grid_lines[arr.length-2] = 2;
@@ -77,7 +77,7 @@ public class MainActivity extends Activity{
         mSignaturePad.setPenColor(3);
         mSignaturePad.setPts(arr, grid_lines,strTime);
 
-        mSignaturePad.update();
+//        mSignaturePad.update();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +100,17 @@ public class MainActivity extends Activity{
 
             @Override
             public void onSigned() {
-                mSaveButton.setEnabled(true);
+
                 mClearButton.setEnabled(true);
             }
 
             @Override
             public void onClear() {
-                mSaveButton.setEnabled(false);
                 mClearButton.setEnabled(false);
             }
         });
 
         mClearButton = (Button) findViewById(R.id.Start);
-        mSaveButton = (Button) findViewById(R.id.save_button);
         this.mChangePlotTypeButton= (Button) findViewById(R.id.save_button);
         this.mZoomInButton= (Button) findViewById(R.id.zoom_in);
         this.mZoomOutButton= (Button) findViewById(R.id.zoom_out);
@@ -146,22 +144,7 @@ public class MainActivity extends Activity{
             }
         });
 
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
-                if (addJpgSignatureToGallery(signatureBitmap)) {
-                    Toast.makeText(MainActivity.this, "Signature saved into the Gallery", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Unable to store the signature", Toast.LENGTH_SHORT).show();
-                }
-                if (addSvgSignatureToGallery(mSignaturePad.getSignatureSvg())) {
-                    Toast.makeText(MainActivity.this, "SVG Signature saved into the Gallery", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Unable to store the SVG signature", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
         mChangePlotTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
