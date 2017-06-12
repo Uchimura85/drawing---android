@@ -3,7 +3,7 @@ Android Signature Pad
 
 Android Signature Pad is an Android library for drawing smooth signatures. It uses variable width Bézier curve interpolation based on [Smoother Signatures](http://corner.squareup.com/2012/07/smoother-signatures.html) post by [Square](https://squareup.com).
 
-![Screenshot](https://github.com/gcacace/android-signaturepad/raw/master/header.png)
+
 
 ## Features
  * Bézier implementation for a smoother line
