@@ -13,12 +13,10 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.github.gcacace.signaturepad.utils.Point;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import java.io.File;
@@ -29,7 +27,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import it.gcacace.signaturepad.R;
 
@@ -38,7 +35,7 @@ public class MainActivity extends Activity{
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private SignaturePad mSignaturePad;
-    private Button mClearButton;
+    private Button mStartButton;
 
     private Button mChangePlotTypeButton;
     private Button mZoomInButton;
@@ -73,11 +70,11 @@ public class MainActivity extends Activity{
         strTime.set(arr.length-2,"8:00 PM");
 
         sinX +=0.5f;
-        mSignaturePad.setMaxHeight(200);
-        mSignaturePad.setPenColor(3);
+        mSignaturePad.setMaxHeight(3000);
+        mSignaturePad.setGraphType(0);
         mSignaturePad.setPts(arr, grid_lines,strTime);
 
-//        mSignaturePad.update();
+        mSignaturePad.update();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +98,21 @@ public class MainActivity extends Activity{
             @Override
             public void onSigned() {
 
-                mClearButton.setEnabled(true);
+                mStartButton.setEnabled(true);
             }
 
             @Override
             public void onClear() {
-                mClearButton.setEnabled(false);
+                mStartButton.setEnabled(false);
             }
         });
 
-        mClearButton = (Button) findViewById(R.id.Start);
+        mStartButton = (Button) findViewById(R.id.Start);
         this.mChangePlotTypeButton= (Button) findViewById(R.id.save_button);
         this.mZoomInButton= (Button) findViewById(R.id.zoom_in);
         this.mZoomOutButton= (Button) findViewById(R.id.zoom_out);
 
-        mClearButton.setOnClickListener(new View.OnClickListener() {
+        mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Thread thread;
@@ -148,7 +145,7 @@ public class MainActivity extends Activity{
         mChangePlotTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSignaturePad.setPenColor(plotType);
+                mSignaturePad.setGraphType(plotType);
             }
         });
         mZoomInButton.setOnClickListener(new View.OnClickListener() {

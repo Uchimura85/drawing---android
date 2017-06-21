@@ -301,13 +301,13 @@ public class SignaturePad extends View {
                         Shader.TileMode.MIRROR);
                 Shader shaderGradient2 = linearGradient2;
 
-                Paint paintCalmTxt = new Paint();
-                paintCalmTxt.setTextSize(radius * 0.5f);
-                paintCalmTxt.setAntiAlias(true);
-                paintCalmTxt.setTextAlign(Paint.Align.RIGHT);
-                mSignatureBitmapCanvas.drawText("" + (int) calmValue, originX - radius * 0.2f, originY, paintCalmTxt);
-                paintCalmTxt.setTextSize(radius * 0.3f);
-                mSignatureBitmapCanvas.drawText("" + (int) calmValueF, originX - radius * 0.2f, originY + radius * 0.3f, paintCalmTxt);
+//                Paint paintCalmTxt = new Paint();
+//                paintCalmTxt.setTextSize(radius * 0.5f);
+//                paintCalmTxt.setAntiAlias(true);
+//                paintCalmTxt.setTextAlign(Paint.Align.RIGHT);
+//                mSignatureBitmapCanvas.drawText("" + (int) calmValue, originX - radius * 0.2f, originY, paintCalmTxt);
+//                paintCalmTxt.setTextSize(radius * 0.3f);
+//                mSignatureBitmapCanvas.drawText("" + (int) calmValueF, originX - radius * 0.2f, originY + radius * 0.3f, paintCalmTxt);
 
 
                 Paint paintGradient1 = new Paint();
@@ -1267,9 +1267,9 @@ public class SignaturePad extends View {
      */
     public void setPenColorRes(int colorRes) {
         try {
-            setPenColor(getResources().getColor(colorRes));
+            setGraphType(getResources().getColor(colorRes));
         } catch (Resources.NotFoundException ex) {
-            setPenColor(Color.parseColor("#000000"));
+            setGraphType(Color.parseColor("#000000"));
         }
     }
 
@@ -1278,7 +1278,7 @@ public class SignaturePad extends View {
      *
      * @param color the color.
      */
-    public void setPenColor(int color) {
+    public void setGraphType(int color) {
 //        mPaint.setColor(color);
         this.plotType = color;
         update();
