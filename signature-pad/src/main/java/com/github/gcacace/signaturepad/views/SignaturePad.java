@@ -34,6 +34,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SignaturePad extends View {
+    public static final int PLOT_TYPE_ECG = 0;
+
+    public static final int PLOT_TYPE_CALMNESS = 1;
+    public static final int PLOT_TYPE_MOTION = 2;
+    public static final int PLOT_TYPE_HEART_RATE= 3;
+    public static final int PLOT_TYPE_ECG_WHTI_GRID = 4;
+    public static final int PLOT_TYPE_SPIDER = 5;
+    public static final int PLOT_TYPE_SLEEP_MAP = 6;
+    public static final int PLOT_TYPE_MOTION_INTENSITY = 7;
+    public static final int PLOT_TYPE_CALMNESS_INTENSITY = 8;
 
     public ArrayList<Point> mPts;
     private int intevalPixel;
@@ -141,43 +151,42 @@ public class SignaturePad extends View {
         }
         this.update();
     }
-
+// --update
     public void update() {
         initPainter();
         switch (this.plotType) {
-            case 0: // ecg
+            case SignaturePad.PLOT_TYPE_ECG: // ecg
                 updatePaintECG();
                 break;
-            case 1://Camlness
+            case SignaturePad.PLOT_TYPE_CALMNESS://Camlness
                 this.MAXHEIGHT = 200;
                 updatePaintCalm();
                 break;
-            case 2://motion
+            case SignaturePad.PLOT_TYPE_MOTION://motion
                 this.MAXHEIGHT = 200;
                 updatePaintMotion();
                 break;
-            case 3://Heart rate
+            case SignaturePad.PLOT_TYPE_HEART_RATE://Heart rate
                 this.MAXHEIGHT = 200;
                 updatePaintHrt();
                 break;
-            case 4://ECG with Grid
+            case SignaturePad.PLOT_TYPE_ECG_WHTI_GRID://ECG with Grid
                 initPainter();
                 updatePaintECGWithGrid();
                 break;
-            case 5://Spider
+            case SignaturePad.PLOT_TYPE_SPIDER://Spider
                 updateSpiderChart();
                 break;
-            case 6:// sleep map
+            case SignaturePad.PLOT_TYPE_SLEEP_MAP:// sleep map
                 this.MAXHEIGHT = 200;
                 updatePaintSleepMap();
                 break;
-            case 7:// motion intensity
+            case SignaturePad.PLOT_TYPE_MOTION_INTENSITY:// motion intensity
                 updateMotionIntensityChart();
                 break;
-            case 8:// Calmness intensity
+            case SignaturePad.PLOT_TYPE_CALMNESS_INTENSITY:// Calmness intensity
                 updateCalmnessChart();
                 break;
-
             default:
                 updatePaintECG();
         }
@@ -722,6 +731,7 @@ public class SignaturePad extends View {
                 j++;
             }
             if (mSignatureBitmapCanvas != null) {
+                paintGridLarge = new Paint();
                 mSignatureBitmapCanvas.drawRect(LEFT, TOP, RIGHT, BOTTOM, paintGridLarge);
                 mSignatureBitmapCanvas.drawRect(0, 0, LEFT - 1, HEIGHT, transparentPaint);
                 mSignatureBitmapCanvas.drawRect(RIGHT + 0.5f, 0, WIDTH, HEIGHT, transparentPaint);
@@ -1281,7 +1291,7 @@ public class SignaturePad extends View {
     public void setGraphType(int color) {
 //        mPaint.setColor(color);
         this.plotType = color;
-        update();
+//        update();
     }
 
     /**

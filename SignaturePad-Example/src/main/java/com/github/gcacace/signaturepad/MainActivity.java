@@ -30,7 +30,7 @@ import java.util.Timer;
 
 import it.gcacace.signaturepad.R;
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -41,53 +41,34 @@ public class MainActivity extends Activity{
     private Button mZoomInButton;
     private Button mZoomOutButton;
 
-    int MAX_LENGTH = 22;
-    float [] arr =new float[MAX_LENGTH];
-    int [] grid_lines =new int[MAX_LENGTH];
+    int MAX_LENGTH = 220;
+    float[] arr = new float[MAX_LENGTH];
+    int[] grid_lines = new int[MAX_LENGTH];
 
     List<String> strTime = new ArrayList<>();
     float sinX = 0f;
-    void drawUpdate(){
-        float [] ttt = new float[]{130, 17, 120, 12,34,0, 140, 160, 130, 140, 160, 130, 140, 160, 130, 140, 160, 130, 140, 160, 170, 200};
-        for(int i=0;i<ttt.length-1;i++){
-            arr[i] = ttt[i];
-            grid_lines[i] = 0;
-            if(i % 50 == 0)
-            {
-                grid_lines[i] = 0;
-                strTime.add("k"+i);
-            }else
-            {
-                strTime.add("");
-            }
-        }
-        strTime.add("");
 
-//        arr[arr.length-1]=1500 + (float)Math.sin(sinX)*1500;
-        grid_lines[0] = 2;
-        strTime.set(0,"11:00 PM");
-        grid_lines[arr.length-2] = 2;
-        strTime.set(arr.length-2,"8:00 PM");
-
-        sinX +=0.5f;
-        mSignaturePad.setMaxHeight(3000);
-        mSignaturePad.setGraphType(0);
-        mSignaturePad.setPts(arr, grid_lines,strTime);
-
+    void drawUpdate() {
+        sinX += 0.5f;
+        mSignaturePad.addPoint((float) (Math.random() * 2500));
         mSignaturePad.update();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
-        for(int i = 0 ; i < MAX_LENGTH ;i  ++ )
-            arr[i] = (float)Math.random()*200;
+        for (int i = 0; i < MAX_LENGTH; i++)
+            arr[i] = (float) Math.random() * 200;
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-
-
-        Timer timer = new Timer();
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_CALMNESS_INTENSITY);
+        mSignaturePad.setMaxHeight(3000);
+        arr[0] = 300; //radius
+        arr[1] = 5; // thin
+        arr[2] = 350;
+        mSignaturePad.setPts(arr);
 
         mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
             @Override
@@ -108,9 +89,9 @@ public class MainActivity extends Activity{
         });
 
         mStartButton = (Button) findViewById(R.id.Start);
-        this.mChangePlotTypeButton= (Button) findViewById(R.id.save_button);
-        this.mZoomInButton= (Button) findViewById(R.id.zoom_in);
-        this.mZoomOutButton= (Button) findViewById(R.id.zoom_out);
+        this.mChangePlotTypeButton = (Button) findViewById(R.id.save_button);
+        this.mZoomInButton = (Button) findViewById(R.id.zoom_in);
+        this.mZoomOutButton = (Button) findViewById(R.id.zoom_out);
 
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +106,7 @@ public class MainActivity extends Activity{
                 thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (;;) {
+                        for (; ; ) {
                             runOnUiThread(runnableDraw);
                             try {
                                 Thread.sleep(100);
@@ -145,7 +126,10 @@ public class MainActivity extends Activity{
         mChangePlotTypeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                plotType++;
+                plotType %= 9;
                 mSignaturePad.setGraphType(plotType);
+                mSignaturePad.update();
             }
         });
         mZoomInButton.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +154,9 @@ public class MainActivity extends Activity{
                 300);
 
     }
+
     int plotType = 0;
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
