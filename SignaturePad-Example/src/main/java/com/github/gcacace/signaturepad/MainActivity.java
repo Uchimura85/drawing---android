@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
             arr[i] = (float) Math.random() * 200;
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_HEART_RATE);
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE);
         mSignaturePad.setMaxHeight(3000);
         arr[0] = 300; //radius
         arr[1] = 5; // thin

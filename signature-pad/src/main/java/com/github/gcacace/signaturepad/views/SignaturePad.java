@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import com.github.gcacace.signaturepad.R;
 import com.github.gcacace.signaturepad.utils.Bezier;
@@ -44,6 +45,8 @@ public class SignaturePad extends View {
     public static final int PLOT_TYPE_SLEEP_MAP = 6;
     public static final int PLOT_TYPE_MOTION_INTENSITY = 7;
     public static final int PLOT_TYPE_CALMNESS_INTENSITY = 8;
+    public static final int PLOT_TYPE_TIME_IN_HEART_RATE = 9;
+
 
     public ArrayList<Point> mPts;
     private int intevalPixel;
@@ -192,6 +195,11 @@ public class SignaturePad extends View {
             case SignaturePad.PLOT_TYPE_CALMNESS_INTENSITY:// Calmness intensity
                 updateCalmnessChart();
                 break;
+            case SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE:// Calmness intensity
+                this.MAXHEIGHT = 500;
+                updateTimeInHeartRate();
+                break;
+
             default:
                 updatePaintECG();
         }
@@ -360,6 +368,85 @@ public class SignaturePad extends View {
         }
     }
 
+    private static final int[] arrBarColor = {Color.rgb(0xfd, 0x25, 0x03), Color.rgb(0xff, 0x93, 0x06), Color.rgb(0xff, 0xfc, 0x06), Color.rgb(0x9c, 0xfa, 0x06), Color.rgb(0xac, 0xae, 0xaf)};
+    private static final String[] arrStringTimeInfo = {"Max", "Hard", "Cardio", "Fat Burn", "Warm Up"};
+
+
+    public void updateTimeInHeartRate() {
+        Toast.makeText(getContext(), "test", Toast.LENGTH_SHORT).show();
+        int HEIGHT = this.getHeight();
+        int WIDTH = this.getWidth();
+
+        int marginLeft = 0;
+        int marginRight = 0;
+
+        int marginTop = 5;
+        int marginBottom = 20;
+
+        float LEFT = marginLeft;
+        float RIGHT = WIDTH - marginRight;
+        float TOP = marginTop;
+        float BOTTOM = HEIGHT - marginBottom;
+        if (this.mPts.size() > 4) {
+            mScaleFactorY = 1;
+            mPaintHRT.setAntiAlias(true);
+            mPaintHRT.setStrokeWidth(4);
+
+            mPaintHRT.setColor(Color.rgb(0x32, 0xb5, 0xe5));
+            //khs
+            ensureSignatureBitmap();
+            mPoints = new ArrayList<>(); // init beizer(prevent cycle
+
+            if (mSignatureBitmapCanvas != null) {
+                Paint paintBar = new Paint();
+                Paint paintInfo = new Paint();
+                Paint paintMinutes = new Paint();
+                paintInfo.setAntiAlias(true);
+                paintMinutes.setAntiAlias(true);
+                float fontSize = 35;
+                paintMinutes.setTextSize(fontSize);
+                paintInfo.setTextSize(fontSize);
+                paintInfo.setColor(Color.rgb(0x9e, 0x9f, 0xa1));
+                int spaceY = 20;
+
+                float contentHeight = BOTTOM - TOP;
+                float thinY = (contentHeight - 4 * spaceY) / 5f;
+                float contentWidth = RIGHT - LEFT;
+                float txtPos = (thinY - fontSize) / 2;
+                float spaceX = 20;
+                float maxTxtWidth = 0;
+                for (int i = 0; i < 5; i++) {
+                    float widthVal = this.mPts.get(i).val;
+                    float txtInfoWidth = paintMinutes.measureText(arrStringTimeInfo[i]);
+                    String strMinute = "" + Math.round(widthVal) + " minutes";
+                    float txtMinutesWidth = paintMinutes.measureText(strMinute);
+                    if (maxTxtWidth < widthVal + txtInfoWidth + txtMinutesWidth + 2 * spaceX) {
+                        maxTxtWidth = widthVal + txtInfoWidth + txtMinutesWidth + 2 * spaceX;
+                    }
+                }
+                float maxBarWidth = contentWidth - maxTxtWidth;
+
+                for (int i = 0; i < 5; i++) {
+                    paintBar.setColor(arrBarColor[i]);
+                    float widthVal = this.mPts.get(i).val * WIDTH / maxBarWidth;
+                    float txtInfoWidth = paintMinutes.measureText(arrStringTimeInfo[i]);
+                    String strMinute = "" + Math.round(widthVal) + " minutes";
+                    float txtMinutesWidth = paintMinutes.measureText(strMinute);
+
+
+                    mSignatureBitmapCanvas.drawRect(LEFT, TOP + i * (thinY + spaceY), LEFT + widthVal, TOP + i * (thinY + spaceY) + thinY, paintBar);
+
+                    mSignatureBitmapCanvas.drawText(strMinute, LEFT + widthVal + spaceX, TOP + i * (thinY + spaceY) + thinY - txtPos, paintMinutes);
+
+                    mSignatureBitmapCanvas.drawText(arrStringTimeInfo[i], LEFT + widthVal + txtMinutesWidth + spaceX + spaceX, TOP + i * (thinY + spaceY) + thinY - txtPos, paintInfo);
+
+                }
+                invalidate();
+
+            }
+        }
+    }
+
     public void updateSpiderChart() {
         float[] levels = {4.3f, 3, 2, 1.7f, 3.7f, 1, 2, 3, 2.2f, 5};
         int height = this.getHeight();
@@ -522,11 +609,6 @@ public class SignaturePad extends View {
         }
     }
 
-
-    public void addGridLine(boolean bThick) {
-
-    }
-
     public void updatePaintECG() {
         int height = this.getHeight();
         int MAXHEIGHT = 2500;
@@ -589,6 +671,7 @@ public class SignaturePad extends View {
 
 
     Paint paintHrtLineWithoutGradient = new Paint();
+
     public void initPainter() {
         mPaintECG.setColor(Color.rgb(0x32, 0xb5, 0xe5));
         HEIGHT = this.getHeight();
@@ -627,7 +710,7 @@ public class SignaturePad extends View {
 
         paintHrtLineWithoutGradient.setStrokeWidth(2);
         paintHrtLineWithoutGradient.setAntiAlias(true);
-        paintHrtLineWithoutGradient.setColor(Color.rgb(0x97,0x97,0x97));
+        paintHrtLineWithoutGradient.setColor(Color.rgb(0x97, 0x97, 0x97));
         // END init heart rate
     }
 
