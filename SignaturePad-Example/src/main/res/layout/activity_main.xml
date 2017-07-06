@@ -20,8 +20,8 @@
         <com.github.gcacace.signaturepad.views.SignaturePad
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#EEEEEE"
-            android:id="@+id/signature_pad" />
+            android:id="@+id/signature_pad"
+            signature:isHeartLineGradient="false"/>
     </RelativeLayout>
 
     <LinearLayout
