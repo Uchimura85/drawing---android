@@ -41,16 +41,13 @@ public class MainActivity extends Activity {
     private Button mZoomInButton;
     private Button mZoomOutButton;
 
-    int MAX_LENGTH = 220;
+    int MAX_LENGTH = 3;
     float[] arr = new float[MAX_LENGTH];
-    int[] grid_lines = new int[MAX_LENGTH];
-
-    List<String> strTime = new ArrayList<>();
     float sinX = 0f;
 
     void drawUpdate() {
         sinX += 0.5f;
-        mSignaturePad.addPoint((float) (Math.random() * 2500));
+//        mSignaturePad.addPoint((float) (Math.random() * 10));
         mSignaturePad.update();
     }
 
@@ -60,14 +57,17 @@ public class MainActivity extends Activity {
         verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
         for (int i = 0; i < MAX_LENGTH; i++)
-            arr[i] = (float) Math.random() * 200;
+        {
+            arr[i] = (float) Math.random() * 10;
+//            arr[i] = 350;
+        }
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE);
-        mSignaturePad.setMaxHeight(3000);
-        arr[0] = 300; //radius
-        arr[1] = 5; // thin
-        arr[2] = 350;
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_CALMNESS);
+        mSignaturePad.setMaxHeight(10);
+        arr[0] = 1; //radius
+        arr[1] = 50; // thin
+        arr[2] = 100;
         mSignaturePad.setPts(arr);
 
         mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
