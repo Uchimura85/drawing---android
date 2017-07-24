@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     private Button mZoomInButton;
     private Button mZoomOutButton;
 
-    int MAX_LENGTH = 3;
+    int MAX_LENGTH = 6;
     float[] arr = new float[MAX_LENGTH];
     float sinX = 0f;
 
@@ -63,11 +63,15 @@ public class MainActivity extends Activity {
         }
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_CALMNESS);
-        mSignaturePad.setMaxHeight(10);
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_HEART_RATE);
+        mSignaturePad.setMaxHeight(200);
         arr[0] = 1; //radius
         arr[1] = 50; // thin
         arr[2] = 100;
+        arr[3] = 100;
+        arr[4] = 100;
+        arr[5] = 100;
+
         mSignaturePad.setPts(arr);
 
         mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
