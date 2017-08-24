@@ -63,14 +63,14 @@ public class MainActivity extends Activity {
         }
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_HEART_RATE);
-        mSignaturePad.setMaxHeight(200);
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_SLEEP_MAP);
+        mSignaturePad.setMaxHeight(70);
         arr[0] = 1; //radius
-        arr[1] = 50; // thin
-        arr[2] = 100;
-        arr[3] = 100;
-        arr[4] = 100;
-        arr[5] = 100;
+        arr[1] = 0; // thin
+        arr[2] = 2;
+        arr[3] = 3;
+        arr[4] = 2;
+        arr[5] = 4;
 
         mSignaturePad.setPts(arr);
 

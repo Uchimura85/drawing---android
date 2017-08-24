@@ -129,6 +129,16 @@ public class SignaturePad extends View {
         mPts.clear();
     }
 
+    public void setPts(int[] arr) {
+        clearPoints();
+        for (int i = 0; i < arr.length; i++) {
+            Point newPt = new Point();
+            newPt.set(arr[i], 0);
+            mPts.add(newPt);
+        }
+        this.update();
+    }
+
     public void setPts(float[] arr) {
         clearPoints();
         for (int i = 0; i < arr.length; i++) {
@@ -138,6 +148,7 @@ public class SignaturePad extends View {
         }
         this.update();
     }
+
 
     public void setPts(float[] arr, int[] grid_lines) {
         clearPoints();
@@ -183,20 +194,13 @@ public class SignaturePad extends View {
                 updateSpiderChart();
                 break;
             case SignaturePad.PLOT_TYPE_SLEEP_MAP:// sleep map
-                this.MAXHEIGHT = 200;
                 updatePaintSleepMap();
                 break;
-            case SignaturePad.PLOT_TYPE_MOTION_INTENSITY:// motion intensity
-                updateMotionIntensityChart();
-                break;
-            case SignaturePad.PLOT_TYPE_CALMNESS_INTENSITY:// Calmness intensity
-                updateCalmnessChart();
-                break;
+
             case SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE:// Calmness intensity
                 updateTimeInHeartRate();
                 break;
             case PLOT_TYPE_SLEEP_STAGE:
-                this.MAXHEIGHT = 500;
                 updateSleepStage();
                 break;
             default:
@@ -481,11 +485,11 @@ public class SignaturePad extends View {
                 Paint paintMinutes = new Paint();
                 paintInfo.setAntiAlias(true);
                 paintMinutes.setAntiAlias(true);
-                float fontSize = 35;
+                float fontSize = 30;
                 paintMinutes.setTextSize(fontSize);
                 paintInfo.setTextSize(fontSize);
                 paintInfo.setColor(Color.rgb(0x9e, 0x9f, 0xa1));
-                int spaceY = 20;
+                int spaceY = 12;
 
                 float contentHeight = BOTTOM - TOP;
                 float thinY = (contentHeight - 2 * spaceY) / 4f;
@@ -510,7 +514,7 @@ public class SignaturePad extends View {
                 for (int i = 0; i < 4; i++) {
                     paintBar.setColor(arrBarColor[i]);
                     float value = this.mPts.get(i).val;
-                    float realVal = value * maxBarWidth / MAXHEIGHT;
+                    float realVal = value / MAXHEIGHT * maxBarWidth;
                     String strMinute = "" + Math.round(value) + " minutes";
                     float txtMinutesWidth = paintMinutes.measureText(strMinute);
 
@@ -528,7 +532,12 @@ public class SignaturePad extends View {
     }
 
     public void updateSpiderChart() {
-        float[] levels = {4.3f, 3, 2, 1.7f, 3.7f, 1, 2, 3, 2.2f, 5};
+        float[] levels = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        if (mPts.size() >= 10) {
+            for (int i = 0; i < 10; i++) {
+                levels[i] = this.mPts.get(i).val;
+            }
+        }
         int height = this.getHeight();
         int MAXHEIGHT = 2500;
         int marginBottom = 30;
@@ -552,11 +561,10 @@ public class SignaturePad extends View {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
                         coordinate[i][j] = new TimedPoint();
-
                     }
                 }
 
-                float unit = 35;
+                float unit = 30;
                 float originX = getWidth() / 2;
                 float originY = getHeight() / 2;
                 double PI = Math.PI;
@@ -613,7 +621,6 @@ public class SignaturePad extends View {
                         }
                         mSignatureBitmapCanvas.drawText(labels[i], point.x + originX - textWidth / 2 + textPosX, point.y + originY + textPosY, mPaintText);
                     }
-
                 }
 
                 mPaintSpider.setARGB(0xFF, 0xFA, 0x98, 0X41);
@@ -789,7 +796,7 @@ public class SignaturePad extends View {
 
         paintHrtLineWithoutGradient.setStrokeWidth(2);
         paintHrtLineWithoutGradient.setAntiAlias(true);
-        paintHrtLineWithoutGradient.setColor(Color.rgb(0x97, 0x97, 0x97));
+        paintHrtLineWithoutGradient.setColor(Color.rgb(0x15, 0x75, 0xFF));
         // END init heart rate
     }
 
@@ -993,7 +1000,7 @@ public class SignaturePad extends View {
             mPaintHRT.setAntiAlias(true);
             mPaintHRT.setStrokeWidth(4);
 
-            mPaintHRT.setColor(Color.rgb(0x32, 0xb5, 0xe5));
+            mPaintHRT.setColor(Color.rgb(0x0, 0x0, 0x0));
 
             ensureSignatureBitmap();
 
@@ -1004,8 +1011,8 @@ public class SignaturePad extends View {
             if (mSignatureBitmapCanvas != null) {
                 Paint paintGrid = new Paint();
                 mSignatureBitmapCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
-                        RIGHT, -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
+                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -1 + -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
+                        RIGHT, -1 + -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
                 mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -18 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
                         RIGHT, -18 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
                 mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -36 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
@@ -1159,7 +1166,7 @@ public class SignaturePad extends View {
         int marginRight = 0;
 
         int marginTop = 30;
-        int marginBottom = 70;
+        int marginBottom = 5;
 
         float LEFT = marginLeft;
         float RIGHT = WIDTH - marginRight;
@@ -1229,7 +1236,6 @@ public class SignaturePad extends View {
                         Color.rgb(15, 176, 9),
                         Color.rgb(129, 172, 23),
                         Color.rgb(136, 170, 21),
-
                 },
                 new float[]{
                         0, 0.18f, 0.38f, 0.57f, 0.78f, 0.98f, 1},
@@ -1244,8 +1250,8 @@ public class SignaturePad extends View {
         int marginLeft = 100;
         int marginRight = 0;
 
-        int marginTop = 30;
-        int marginBottom = 70;
+        int marginTop = 5;
+        int marginBottom = 25;
 
         float LEFT = marginLeft;
         float RIGHT = WIDTH - marginRight;
@@ -1265,26 +1271,27 @@ public class SignaturePad extends View {
             Point from = this.mPts.get(this.mPts.size() - 1);
             if (mSignatureBitmapCanvas != null) {
                 Paint paintGrid = new Paint();
+
                 mSignatureBitmapCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
-                        RIGHT, -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
-                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -40 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
-                        RIGHT, -40 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
-                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -80 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
-                        RIGHT, -80 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
-                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -120 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
-                        RIGHT, -120 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
+                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -(MAXHEIGHT * 0 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
+                        RIGHT, -(MAXHEIGHT * 0 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
+                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -(MAXHEIGHT * 1 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
+                        RIGHT, -(MAXHEIGHT * 1 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
+                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -(MAXHEIGHT * 2 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
+                        RIGHT, -(MAXHEIGHT * 2 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
+                mSignatureBitmapCanvas.drawLine(LEFT - LEFT, -(MAXHEIGHT * 3 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2,
+                        RIGHT, -(MAXHEIGHT * 3 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, paintGrid);
 
                 mPaintHRT.setTextSize(20);
                 mPaintHRT.setAntiAlias(true);
 //                mPaintHRT.setTextAlign(Paint.Align.RIGHT);
                 int textMarginBottom = -6;
-                mSignatureBitmapCanvas.drawText("Deep Sleep", LEFT - LEFT + 6, textMarginBottom + -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
-                mSignatureBitmapCanvas.drawText("Shallow Sleep", LEFT - LEFT + 6, textMarginBottom + -40 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
-                mSignatureBitmapCanvas.drawText("REM", LEFT - LEFT + 6, textMarginBottom + -80 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
-                mSignatureBitmapCanvas.drawText("Awake", LEFT - LEFT + 6, textMarginBottom + -120 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
+                mSignatureBitmapCanvas.drawText("Deep Sleep", LEFT - LEFT + 6, textMarginBottom + -(MAXHEIGHT * 0 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
+                mSignatureBitmapCanvas.drawText("Shallow Sleep", LEFT - LEFT + 6, textMarginBottom + -(MAXHEIGHT * 1 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
+                mSignatureBitmapCanvas.drawText("REM", LEFT - LEFT + 6, textMarginBottom + -(MAXHEIGHT * 2 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
+                mSignatureBitmapCanvas.drawText("Awake", LEFT - LEFT + 6, textMarginBottom + -(MAXHEIGHT * 3 / 4) * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, mPaintHRT);
             }
-            for (int i = 0; i < this.mPts.size() - 1; i++) {
+            for (int i = 0; i < this.mPts.size(); i++) {
                 Point to = this.mPts.get(i);
                 if (mSignatureBitmapCanvas != null) {
                     mPaintCALM.setStyle(Paint.Style.FILL);
@@ -1323,7 +1330,7 @@ public class SignaturePad extends View {
 //                mSignatureBitmapCanvas.drawRect(0, 0, WIDTH, TOP - 0.5f, transparentPaint);
 //                mSignatureBitmapCanvas.drawRect(0, BOTTOM + 0.5f, WIDTH, HEIGHT, transparentPaint);
 
-//                mSignatureBitmapCanvas.drawRect(0, BOTTOM + 0.5f, WIDTH, HEIGHT, transparentPaint);
+                mSignatureBitmapCanvas.drawRect(0, BOTTOM + 0.5f, WIDTH, HEIGHT, transparentPaint);
                 invalidate();
             }
         }
@@ -1353,7 +1360,7 @@ public class SignaturePad extends View {
         int marginRight = 0;
 
         int marginTop = 30;
-        int marginBottom = 70;
+        int marginBottom = 5;
 
         float LEFT = marginLeft;
         float RIGHT = WIDTH - marginRight;
