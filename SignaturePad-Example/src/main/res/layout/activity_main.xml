@@ -19,7 +19,7 @@
 
         <com.github.gcacace.signaturepad.views.SignaturePad
             android:layout_width="fill_parent"
-            android:layout_height="110dp"
+            android:layout_height="310dp"
             android:background="#eee"
             android:id="@+id/signature_pad"
             signature:isHeartLineGradient="false"/>

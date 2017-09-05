@@ -64,8 +64,6 @@ public class SignaturePad extends View {
     private float mLastWidth;
     private RectF mDirtyRect;
 
-    private final SvgBuilder mSvgBuilder = new SvgBuilder();
-
     // Cache
     private List<TimedPoint> mPointsCache = new ArrayList<>();
     private ControlTimedPoints mControlTimedPointsCached = new ControlTimedPoints();
@@ -405,7 +403,7 @@ public class SignaturePad extends View {
                 Paint paintMinutes = new Paint();
                 paintInfo.setAntiAlias(true);
                 paintMinutes.setAntiAlias(true);
-                float fontSize = 35;
+                float fontSize = 25;
                 paintMinutes.setTextSize(fontSize);
                 paintInfo.setTextSize(fontSize);
                 paintInfo.setColor(Color.rgb(0x9e, 0x9f, 0xa1));
@@ -485,7 +483,7 @@ public class SignaturePad extends View {
                 Paint paintMinutes = new Paint();
                 paintInfo.setAntiAlias(true);
                 paintMinutes.setAntiAlias(true);
-                float fontSize = 30;
+                float fontSize = 25;
                 paintMinutes.setTextSize(fontSize);
                 paintInfo.setTextSize(fontSize);
                 paintInfo.setColor(Color.rgb(0x9e, 0x9f, 0xa1));
@@ -1031,10 +1029,10 @@ public class SignaturePad extends View {
                 int textMarginBottom = -6;
                 txtPaint.setColor(Color.rgb(0xA3, 0xA5, 0xA6));
                 mSignatureBitmapCanvas.drawText("Warm Up", LEFT - LEFT + 6, textMarginBottom + -0 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, txtPaint);
-                txtPaint.setColor(Color.rgb(0x99, 0xFC, 0x00));
+                txtPaint.setColor(Color.rgb(0x2f, 0x51, 0x5E));
                 mSignatureBitmapCanvas.drawText("Fat Burn", LEFT - LEFT + 6, textMarginBottom + -18 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, txtPaint);
 
-                txtPaint.setColor(Color.rgb(0xFF, 0xFE, 0x00));
+                txtPaint.setColor(Color.rgb(0xC8, 0xC1, 0x62));
                 mSignatureBitmapCanvas.drawText("Cardio", LEFT - LEFT + 6, textMarginBottom + -36 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, txtPaint);
                 txtPaint.setColor(Color.rgb(0xF0, 0x8A, 0x00));
                 mSignatureBitmapCanvas.drawText("Hard", LEFT - LEFT + 6, textMarginBottom + -54 * plotHEIGHT / MAXHEIGHT * mScaleFactorY + originY + (plotHEIGHT) * (mScaleFactorY - 1.0f) / 2, txtPaint);
@@ -1295,7 +1293,7 @@ public class SignaturePad extends View {
                 Point to = this.mPts.get(i);
                 if (mSignatureBitmapCanvas != null) {
                     mPaintCALM.setStyle(Paint.Style.FILL);
-                    mSignatureBitmapCanvas.drawRect(LEFT + (i + 1) * interval, BOTTOM, LEFT + (i + 2) * interval, -mPts.get(i).val * plotHEIGHT / MAXHEIGHT + originY, mPaintCALM);
+                    mSignatureBitmapCanvas.drawRect(LEFT + (i) * interval, BOTTOM, LEFT + (i + 1) * interval, -mPts.get(i).val * plotHEIGHT / MAXHEIGHT + originY, mPaintCALM);
                     mPaintCALM.setTextSize(40);
                     if (to.grid_level == 2) {
                         Paint paintTime = new Paint();
@@ -1513,7 +1511,6 @@ public class SignaturePad extends View {
     }
 
     public void clear() {
-        mSvgBuilder.clear();
         mPoints = new ArrayList<>();
         mLastVelocity = 0;
         mLastWidth = (mMinWidth + mMaxWidth) / 2;
@@ -1536,11 +1533,6 @@ public class SignaturePad extends View {
         return mIsEmpty;
     }
 
-    public String getSignatureSvg() {
-        int width = getTransparentSignatureBitmap().getWidth();
-        int height = getTransparentSignatureBitmap().getHeight();
-        return mSvgBuilder.build(width, height);
-    }
 
     public Bitmap getSignatureBitmap() {
         Bitmap originalBitmap = getTransparentSignatureBitmap();
@@ -1772,7 +1764,7 @@ public class SignaturePad extends View {
     }
 
     private void addBezier(Bezier curve, float startWidth, float endWidth) {
-        mSvgBuilder.append(curve, (startWidth + endWidth) / 2);
+
         ensureSignatureBitmap();
         float originalWidth = mPaint.getStrokeWidth();
         float widthDelta = endWidth - startWidth;

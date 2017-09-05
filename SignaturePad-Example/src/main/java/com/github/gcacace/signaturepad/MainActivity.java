@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        verifyStoragePermissions(this);
+//        verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
         for (int i = 0; i < MAX_LENGTH; i++)
         {
@@ -63,14 +63,14 @@ public class MainActivity extends Activity {
         }
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_SLEEP_MAP);
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE);
         mSignaturePad.setMaxHeight(70);
-        arr[0] = 1; //radius
+        arr[0] = 10; //radius
         arr[1] = 0; // thin
-        arr[2] = 2;
-        arr[3] = 3;
-        arr[4] = 2;
-        arr[5] = 4;
+        arr[2] = 20;
+        arr[3] = 30;
+        arr[4] = 20;
+        arr[5] = 40;
 
         mSignaturePad.setPts(arr);
 
