@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     private Button mZoomInButton;
     private Button mZoomOutButton;
 
-    int MAX_LENGTH = 6;
+    int MAX_LENGTH = 7;
     float[] arr = new float[MAX_LENGTH];
     float sinX = 0f;
 
@@ -56,23 +56,50 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 //        verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
-        for (int i = 0; i < MAX_LENGTH; i++)
-        {
+        for (int i = 0; i < MAX_LENGTH; i++) {
             arr[i] = (float) Math.random() * 10;
 //            arr[i] = 350;
         }
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_TIME_IN_HEART_RATE);
-        mSignaturePad.setMaxHeight(70);
-        arr[0] = 10; //radius
-        arr[1] = 0; // thin
-        arr[2] = 20;
-        arr[3] = 30;
-        arr[4] = 20;
-        arr[5] = 40;
+        mSignaturePad.setGraphType(SignaturePad.PLOT_TYPE_SLEEP_STAGE);
 
-        mSignaturePad.setPts(arr);
+        arr[0] = 640; //radius
+        arr[1] = 40; // thin
+        arr[2] = 1830;
+        arr[3] = 420;
+        arr[4] = 810;
+        arr[5] = 0;
+        arr[6] = 40;
+        float[] arr1 = {2220,3,3,2,2,1,1,100,200};
+        int max = 0;
+        max = (int) arr[0];
+        for (int i = 0; i < 5; i++) {
+            if (max < arr[i]) {
+                max = (int) arr[i];
+            }
+        }
+        Toast.makeText(this, "" + max, Toast.LENGTH_SHORT).show();
+        mSignaturePad.setMaxHeight(300);
+        mSignaturePad.setPts(arr1);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        Log.i("tag", "This'll run 300 milliseconds later");
+                        drawUpdate();
+                    }
+                },
+                300);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        Log.i("tag", "This'll run 300 milliseconds later");
+                        float[] arr1 = {0,3,3,2,2,1,1,100,200};
+                        mSignaturePad.setPts(arr1);
+                        drawUpdate();
+                    }
+                },
+                2000);
 
         mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
             @Override
@@ -148,14 +175,7 @@ public class MainActivity extends Activity {
                 mSignaturePad.zoomOut();
             }
         });
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        Log.i("tag", "This'll run 300 milliseconds later");
-                        drawUpdate();
-                    }
-                },
-                300);
+
 
     }
 
